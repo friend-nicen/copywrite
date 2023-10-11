@@ -1,5 +1,7 @@
 # 抖音视频文案提取
 
+合作请联系微信good7341
+
 ## 介绍
 
 `\app\store\config.js` 文件配置运行参数
@@ -27,4 +29,4 @@ export default {
 ![1.png](demo%2F1.png)
 ![2.png](demo%2F2.png)
 
-合作请联系微信good7341
+
