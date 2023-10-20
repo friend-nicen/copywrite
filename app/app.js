@@ -10,9 +10,9 @@ import * as fs from "fs";
 		
 		
 		// 检测目录是否存在
-		if (!fs.existsSync("vedio")) {
+		if (!fs.existsSync("video")) {
 		  // 如果目录不存在，则创建它
-		  fs.mkdirSync("vedio", { recursive: true });
+		  fs.mkdirSync("video", { recursive: true });
 		} 
 		
 		// 检测目录是否存在
