@@ -2,6 +2,18 @@
 
 合作请联系微信good7341
 
+## 2024-10-29更新
+
+### v1.0
+
+1. 新增绿色免安装的可执行文件，无需额外操作，自带免费识别接口（2分钟以内的视频)，[点击下载 dist/douyin.exe](dist/douyin.exe)
+
+截图演示：
+
+![1.png](demo/3.jpg)
+![2.png](demo/4.jpg)
+![2.png](demo/5.jpg)
+
 ## 介绍
 
 `\app\store\config.js` 文件配置运行参数
@@ -26,7 +38,8 @@ export default {
 运行前，请先安装app目录下的npm包
 
 ## 演示
-![1.png](demo%2F1.png)
-![2.png](demo%2F2.png)
+
+![1.png](demo/1.png)
+![2.png](demo/2.png)
 
 
