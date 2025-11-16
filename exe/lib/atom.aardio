@@ -1,0 +1,11 @@
+﻿namespace atom;
+import win.ui.atom;
+
+function keep(winform,guid){
+	/*冲突窗口的句柄,该函数会自动激活此窗口*/ 
+	var atom,hwnd = winform.atom(guid);
+	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
+	if(!atom){
+		win.quitMessage();	return;
+	}
+}

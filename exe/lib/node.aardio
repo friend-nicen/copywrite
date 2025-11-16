@@ -1,0 +1,37 @@
+﻿/* 命名空间 */
+namespace node;
+import io;
+import nodeJs;
+import crypt.bin;
+import web.json;
+
+var prcs; //进程对象
+
+/* 初始化Node进程 */
+function open(edit, config){
+	
+	if(prcs && prcs.stillActive()){
+		return false;
+	}
+	
+	/* 参数处理 */
+	var pathinfo = io.splitpath(config.script);
+	var json = web.json.stringify(config);
+	
+	nodeJs.workDir = pathinfo.dir;
+		
+	prcs = nodeJs.execFile(pathinfo.file, crypt.bin.encodeBase64(json));
+	prcs.codepage = 65001; //设置
+	prcs.logResponse(edit);
+	
+	return prcs; 
+}
+
+/* 关闭进程 */
+function close(){
+	if(prcs && prcs.stillActive()){
+		prcs.terminate();
+	}	
+}
+
+

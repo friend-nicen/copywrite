@@ -1,0 +1,8 @@
+namespace config
+
+import io;
+import fsys.config;
+
+appData = io.appData("/Copywrite/");
+config  = fsys.config(appData); 
+

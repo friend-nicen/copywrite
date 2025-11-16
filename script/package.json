@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "consola": "^2.15.3",
+    "dayjs": "^1.11.7",
+    "exceljs": "^4.3.0",
+    "puppeteer": "^23.0.2",
+    "rollup": "^4.20.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "axios": "^1.2.1",
+    "cos-nodejs-sdk-v5": "^2.14.6",
+    "iconv-lite": "^0.6.3",
+    "js-base64": "^3.7.7"
+  }
+}

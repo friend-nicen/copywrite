@@ -1,0 +1,45 @@
+﻿namespace plugin;
+
+import inet.http;
+import string;
+import io;
+import config;
+
+
+/* 插件目录 */
+var path = config.appData ++ "plugin";
+io.createDir(config.appData ++ "plugin");	
+
+
+/* 下载指定文件,存放到指定目录 */
+function install(link, name){	
+	// 下载 JavaScript 文件
+	var jsContent = inet.http.get(link);
+	var file = path ++ "\" ++ name ++ ".js"; 
+	// 检查下载是否成功
+	if(jsContent != null){
+    	// 保存文件
+    	if(string.save(file, jsContent)){
+    		return true;
+    	}else{
+    	    return false;
+    	} 
+	}else{
+    	return false; 
+	}
+}
+
+
+/* 插件是否存在 */
+function exist(name){
+	var file = path ++ "\" ++ name ++ ".js"; 
+	return io.exist(file);
+}
+
+
+
+/* 获取插件目录 */ 
+function get(name){
+	return path ++ "\" ++ name ++ ".js"; 
+}
+

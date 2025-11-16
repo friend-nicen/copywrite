@@ -1,45 +1,24 @@
-# 抖音视频文案提取
+# 抖音视频文案批量提取
 
-合作请联系微信good7341
+## 介绍
 
-## 2024-10-29更新
+基于Puppeteer实现，运行exe之后会自动打开抖音网页版。 点击开始提取后，会自动下载并识别当前视频的文案，识别完成之后自动播放下一个视频继续识别
 
-### v1.0
+> 有问题请联系微信good7341
 
-1. 新增绿色免安装的可执行文件，无需额外操作，自带免费识别接口（2分钟以内的视频)，[点击下载 dist/douyin.exe](dist/douyin.exe)
+## 截图演示：
 
-截图演示：
+提供以及编译好的，绿色免安装的可执行文件，无需额外操作，自带免费识别接口（2分钟以内的视频)，[点击下载 douyin.exe](dist/douyin.exe)
+
+20251116更新：~~免费接口用不了了，目前还能批量下载视频，但是识别文案得自己买第三方的文案识别的接口对接~~
 
 ![1.png](demo/3.jpg)
 ![2.png](demo/4.jpg)
 ![2.png](demo/5.jpg)
 
-## 介绍
+## 项目
 
-`\app\store\config.js` 文件配置运行参数
+项目源代码分为两部分exe和puppeteer脚本
 
-```javascript
-export default {
-    "akId": '', //阿里云音频识别应用ID
-    "akSecret": '',  // 阿里云接口调用的Secret
-    "appKey": '', // 阿里云接口调用的key
-    "region": 'oss-cn-shanghai',  // 阿里云对象存储所在地区
-    "bucket": '',  // 阿里云对象存储 Butket名称
-}
-```
-
-## douyin.exe
-
-* `打开窗口`会启动一个Webview窗口，并运行Chrome CDP协议，用于自动化
-* `开始运行`会启动app\app.js脚本，并进行批量自动文案提取
-
-## 运行
-
-运行前，请先安装app目录下的npm包
-
-## 演示
-
-![1.png](demo/1.png)
-![2.png](demo/2.png)
-
-
+* exe，基于aardio实现，官网：https://www.aardio.com
+* script，编译后会生成一个单文件脚本，打开exe的脚本管理，改成douyin.js，复制到plugin目录

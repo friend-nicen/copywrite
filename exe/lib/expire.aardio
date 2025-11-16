@@ -1,0 +1,14 @@
+﻿namespace expire;
+
+import time;
+
+function out(winform){
+	// 设置比较的时间为2024年10月1日
+	var compareTime = time("2030-10-01 00:00:00");
+	// 获取当前时间
+	var currentTime = time();
+	// 比较当前时间是否大于2024年10月1日
+	if (currentTime.getMilliTime()   > compareTime.getMilliTime()  ) {
+    	winform.close();
+	} 
+}

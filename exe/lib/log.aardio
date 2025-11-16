@@ -1,0 +1,13 @@
+﻿namespace log;
+
+import io;
+import fsys.log;
+import time;
+
+var my = fsys.log(io.appData("/copywrite/error.log"));
+
+function print(log){
+	var datetime = tostring(time.now())++"，";	//当前时间
+ 	my.print( datetime ++ log ); //输出
+}
+

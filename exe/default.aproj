@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project ver="10" name="aardio工程3" libEmbed="true" icon="线路.ico" ui="win" output="baidu.exe" CompanyName="单位名称" FileDescription="aardio工程3" LegalCopyright="Copyright (C) 作者 2023" ProductName="aardio工程3" InternalName="aardio工程3" FileVersion="0.0.0.33" ProductVersion="0.0.0.33" publishDir="/dist/" dstrip="true" local="false" ignored="false">
+	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
+	<folder name="资源文件" path="res" embed="true"/>
+	<folder name="窗体文件" path="dlg" comment="目录" embed="true" local="false" ignored="false">
+		<file name="audio.aardio" path="dlg\audio.aardio" comment="dlg\audio.aardio"/>
+		<file name="pannel.aardio" path="dlg\pannel.aardio" comment="dlg\pannel.aardio"/>
+		<file name="web.aardio" path="dlg\web.aardio" comment="dlg\web.aardio"/>
+	</folder>
+</project>

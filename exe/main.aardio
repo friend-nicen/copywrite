@@ -1,0 +1,246 @@
+import win.ui;
+import node;
+import log;
+import thread.command;
+import atom;
+import fsys;
+import io;
+import config;
+import console;
+import process.ffmpeg;
+import process;
+import plugin;
+import expire;
+/*DSG{{*/
+var winform = win.form(text="CopyWrite";right=768;bottom=408;border="dialog frame";max=false)
+winform.add(
+button={cls="button";text="打开抖音";left=225;top=350;right=316;bottom=383;z=3};
+button2={cls="button";text="开始提取";left=651;top=350;right=742;bottom=383;z=1};
+button3={cls="button";text="隐藏抖音窗口";left=328;top=350;right=431;bottom=383;z=4};
+button4={cls="button";text="查看结果";left=548;top=350;right=639;bottom=383;z=5};
+button5={cls="button";text="脚本管理";left=444;top=350;right=535;bottom=383;z=12};
+checkbox={cls="checkbox";text="Checkbox";left=32;top=350;right=46;bottom=364;checked=1;z=7};
+checkbox2={cls="checkbox";text="Checkbox";left=32;top=374;right=46;bottom=388;checked=1;z=9};
+checkbox3={cls="checkbox";text="Checkbox";left=123;top=360;right=137;bottom=374;checked=1;z=11};
+edit={cls="edit";text='点击“打开抖音”，打开需要批量提取文案的页面，点击开始提取，程序将自动提取该页面的所有视频文案！\r\n';left=16;top=22;right=742;bottom=332;ah=1;autohscroll=false;aw=1;bgcolor=0;color=15793151;edge=1;font=LOGFONT(h=-14);multiline=1;readonly=1;vscroll=1;z=2};
+static={cls="static";text="自动切换";left=53;top=349;right=112;bottom=363;notify=1;transparent=1;z=6};
+static2={cls="static";text="下载视频";left=53;top=373;right=112;bottom=387;notify=1;transparent=1;z=8};
+static3={cls="static";text="提取文案";left=144;top=359;right=203;bottom=373;notify=1;transparent=1;z=10}
+)
+/*}}*/
+
+/* 有效期检测 */
+expire.out(winform);
+
+/* 创建原子窗口 */
+atom.keep(winform,"DD23767C-4046-4B2E-8E80-E5C8E8275F33");
+
+/* 订阅 */
+var event = thread.command();
+
+/* 打印日志 */
+var print = function(text){	
+	var datetime = tostring(time.now())++"，";	//当前时间
+ 	winform.edit.print( datetime ++ text ); //输出
+}
+
+
+/* 运行状态 */
+var status = 0; //子窗口状态
+var subwin;  //子窗体
+var installing; //正在安装
+
+/* 启动参数 */
+var options = {
+	appName = "抖音",
+	root = io._exedir,
+	plugin = "douyin",
+	script = "",
+	port = 4001,
+	mode = "mini",
+	token = "",
+	duration = 3000
+}; 
+
+/* 按钮文本 */
+winform.button.text = "打开" ++ options.appName;
+
+/* 获取配置 */
+function getConfig(){
+	
+	/* ffmpeg */
+	var ffmpeg = process.ffmpeg.getPath();
+	
+	/* 判断文件是否存在 */
+	var fileName = ffmpeg ++ ".exe";
+	
+	if(!io.exist(fileName)){
+		fsys.copy(ffmpeg,fileName);
+	}
+	
+    return table.assign({
+    	ffmpeg = fileName,
+    	autoNext = winform.checkbox.checked,
+    	save = {
+    		video = winform.checkbox2.checked,
+    		text = winform.checkbox3.checked
+    	}
+    }, options); 
+}
+
+
+/* 程序运行结束 */
+onClose = function(){
+	print("脚本运行结束.....！"); 
+	winform.button2.text = "开始提取";	
+}
+
+
+/* 启动Node进程 */
+winform.button2.oncommand = function(id,event){
+
+	try{	
+		
+		/* 脚本安装 */
+		if(installing){
+			print("正在安装脚本.....！"); 
+			return;	
+		}
+		
+		
+		/* 判断win窗口是否打开 */
+		if(status < 2){
+			winform.msgbox("提取前请先点击打开" ++ options.appName ++ "，等待" ++ options.appName ++ "加载完毕")
+			return;	
+		}
+		
+		
+
+		/* 插件不存在 */
+		if(!plugin.exist(options.plugin)){
+			print("未检测到脚本，正在安装.....！"); 
+			installing = true;
+			var url = "https://demo.nicen.cn/plugins/douyin.js";
+			plugin.install(url, options.plugin);
+			installing = false;
+			print("安装成功.....！"); 
+		}
+		
+		
+		/* 插件 */
+		options.script = plugin.get(options.plugin);
+		
+		/* 获取配置 */
+		var config = getConfig(); 
+		
+		/* 判断如何处理 */
+		if(winform.button2.text == "开始提取"){
+			
+			print("开始运行，正在启动任务...！"); //输出日志
+			var prcs = node.open(winform.edit, config);
+			
+			if(prcs){
+				prcs.beforeClose = onClose;
+				prcs.onResponseEnd = onClose;
+				winform.button2.text = "停止运行";	
+			}else{
+				print("脚本启动失败，错误日志已记录！"); //输出日志	
+			}
+				
+		}else{
+			print("停止运行，等待程序退出！"); //输出日志
+			node.close(); //关闭进程
+			winform.button2.text = "开始提取";	
+		}
+	
+	}catch(e){
+		log.print(e);
+    	winform.msgbox("发生错误，请联系客服解决。")
+	}
+}
+
+
+/* 打开窗口 */
+winform.button.oncommand = function(id,event){
+	
+	if(status > 0) {
+		print(options.appName ++ '已启动，操作终止！')
+		return; 
+	}
+	
+	print('正在加载' ++ options.appName ++ '，请稍后......');
+	status = 1; //标记状态
+	
+	/* 加载窗口 */
+	subwin = win.loadForm("/dlg/web.aardio",,0,{
+		port = options.port
+	});
+	
+	
+	win.setTopmost(winform.hwnd, true);//窗口置顶
+	
+}
+
+
+/* 抖音开启 */
+event._douyin_open = function(){
+	if(status < 2) print(options.appName ++ '已启动，打开需要提取文案的页面，点击开始提取后任务将自动运行！');
+	status = 2;
+};
+
+
+/* 抖音关闭 */
+event._douyin_close = function(){
+	if(status) print(options.appName ++ '已关闭，停止运行！');
+	node.close(); //关闭进程
+	status = 0;
+};
+
+
+
+/* 窗口关闭 */
+winform.onDestroy = function(){
+	if(subwin) subwin.close();
+}
+
+winform.button3.oncommand = function(id,event){
+	if(status < 1 || !subwin){
+		print('抖音尚未启动！')
+	}else{
+		if(winform.button3.text === "隐藏抖音窗口"){
+			winform.button3.text = "显示抖音窗口";
+			subwin.show(false);
+		}else{
+			winform.button3.text = "隐藏抖音窗口";
+			subwin.show();
+		}
+	}			
+}
+
+
+
+/* 打开目录 */
+winform.button4.oncommand = function(id,event){
+	io.createDir(io._exedir ++ "文案");
+	process.explore_select(io._exedir ++ "文案");
+}
+
+winform.static.oncommand = function(id,event){
+	winform.checkbox.checked = !winform.checkbox.checked;
+}
+
+winform.static3.oncommand = function(id,event){
+	winform.checkbox3.checked = !winform.checkbox3.checked;
+}
+
+winform.static2.oncommand = function(id,event){
+	winform.checkbox2.checked = !winform.checkbox2.checked;
+}
+
+winform.button5.oncommand = function(id,event){
+	process.explore_select(config.appData + "plugin");
+}
+
+winform.show();
+win.loopMessage();
+return winform;

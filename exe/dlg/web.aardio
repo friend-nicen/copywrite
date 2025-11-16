@@ -1,0 +1,53 @@
+import win.ui;
+import win.ui.atom;
+import web.view;
+import atom;
+import config;
+import console;
+import thread.command;
+/*DSG{{*/
+var winform = win.form(text="抖音";right=997;bottom=600;bgcolor=16777215;mode="popup")
+winform.add()
+/*}}*/
+
+/* 创建原子窗口 */
+atom.keep(winform,"0D5B3626-0887-475E-A714-C33D46B34EA6");
+
+/* 运行参数 */
+var options = ({...})[2];
+
+/* 默认端口 */
+if(!options.port) options.port = "4001";
+
+/* 退出时 */
+winform.onDestroy = function(){
+	thread.command._douyin_close();
+}
+
+var wb = web.view(winform,config.appData ++ "douyin","--disable-blink-features=AutomationControlled --remote-debugging-port=" ++ options.port ++ "  --start-maximized");
+
+/* 注入JS */
+var extra = $"/res/eval.js";
+
+/* 注入JS */
+wb.cdpWait("Page.enable");  //允许CSP操作
+wb.cdpWait("Network.enable");  //允许Net操作
+wb.cdpWait("Page.setBypassCSP", { enabled = true}); //禁用CSP
+
+/* 注入JS */
+wb.cdpWait("Page.addScriptToEvaluateOnNewDocument", {source = extra}); //注入JS
+
+
+/* 跳转指定页面 */
+wb.go("https://www.douyin.com/");
+
+/* 网页加载完毕 */
+wb.cdpSubscribe('Page.loadEventFired',function(){
+	thread.command._douyin_open();
+});
+
+
+
+winform.show();
+win.loopMessage();
+return winform;

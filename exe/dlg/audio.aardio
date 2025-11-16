@@ -1,0 +1,94 @@
+import win.ui;
+import fsys.dlg.dir;
+import fsys.dlg;
+import io;
+import process.ffmpeg;
+import fsys;
+import atom;
+/*DSG{{*/
+var winform = win.form(text="音频提取";right=433;bottom=356;exmode="toolwindow";max=false;mode="popup")
+winform.add(
+button={cls="button";text="选择视频";left=320;top=33;right=408;bottom=65;z=2};
+button2={cls="button";text="设置保存目录";left=320;top=86;right=408;bottom=118;z=4};
+button3={cls="button";text="开始转换";left=174;top=299;right=262;bottom=331;z=5};
+edit={cls="edit";left=32;top=33;right=305;bottom=65;bgcolor=16777215;edge=1;font=LOGFONT(h=-14);multiline=1;readonly=1;z=1};
+edit2={cls="edit";left=33;top=86;right=306;bottom=118;bgcolor=16777215;edge=1;font=LOGFONT(h=-14);multiline=1;readonly=1;z=3};
+edit3={cls="edit";left=32;top=135;right=406;bottom=273;ah=1;aw=1;bgcolor=16777215;edge=1;font=LOGFONT(h=-14);multiline=1;readonly=1;vscroll=1;z=6}
+)
+/*}}*/
+
+/* 创建原子窗口 */
+atom.keep(winform,"680FA019-93CB-4D52-B105-3AA590CF8A47");
+
+winform.edit2.text = io._exedir;
+
+winform.button.oncommand = function(id,event){
+	var path = fsys.dlg.open("*.mp4|*.mp4|","请.mp4文件",,winform.hwnd);
+    if(path) {
+        winform.edit.text = path; // 将选择的文件路径显示在编辑框中
+    }
+}
+
+winform.button2.oncommand = function(id,event){
+	var path = fsys.dlg.dir(,winform,'请选择目录');
+    if(path) {
+        winform.edit2.text = path; // 将选择的文件路径显示在编辑框中
+    }
+}
+
+
+/*
+path = io.splitpath("z:\编辑部\==连版==\已经照排过的版面\old\9-6-51.ps")
+io.open()
+io.print("驱动器",path.drive)
+io.print("目录",path.dir)
+io.print("文件名",path.name)
+io.print("后缀名",path.ext)
+io.print("文件名+后缀名",path.file)
+*/
+
+winform.button3.oncommand = function(id,event){
+	
+
+		/* 是否选择文件 */
+		if(#winform.edit2.text === 0){
+			win.msgbox("没有设置输出目录！")
+			return;	
+		}
+		
+		/* 是否设置间隔时间 */
+		if(#winform.edit.text === 0){
+			win.msgbox("没有选中视频文件！")
+			return;	
+		}
+		
+		if(!io.exist( winform.edit2.text ) ){
+    		win.msgbox("指定的目录不存在！")
+			return;	
+		}
+	
+		winform.edit3.print("开始提取...");
+		
+	
+	
+		var file = winform.edit.text;
+		
+		var name = io.splitpath(winform.edit.text);
+        var nameEx = name.name;
+		
+		var newFile = winform.edit2.text ++ "\" ++ nameEx ++ ".wav";	
+		var ffmpeg = process.ffmpeg("/",`-i "` ++ file ++ `" -vn -acodec pcm_s16le -ar 8000 -y "` ++ newFile ++ `"`);
+		
+		ffmpeg.logResponse(winform.edit3);
+		
+		ffmpeg.onResponseEnd= function(){
+			winform.edit3.print("提取结束");
+		}
+		
+		
+
+}
+
+winform.show();
+win.loopMessage();
+return extra;

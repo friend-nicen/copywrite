@@ -1,0 +1,27 @@
+﻿namespace uuid;
+import fsys.config;
+import win.guid
+import io;
+import console;
+
+// 指定配置文件所在的目录
+var configDir = io.appData("/BatchGet/");
+var config = fsys.config(configDir);
+
+/* 定义一个函数来获取或生成 UUID */
+function get() {
+	
+    // 尝试获取配置文件中的 UUID
+    var uuid = config.device.uuid;
+    
+    if(!uuid){
+        // 如果 UUID 不存在，则生成一个新的 UUID
+        uuid = win.guid.create().toString();
+        // 保存新的 UUID 到配置文件
+        config.device.uuid = uuid;
+        config.saveAll();
+	}
+	
+    return uuid;
+}
+

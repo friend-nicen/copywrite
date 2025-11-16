@@ -1,0 +1,63 @@
+﻿namespace tray;
+import win.util.tray;
+import win.ui.menu;
+import mouse;
+import console;
+
+
+function keep(winform){
+	
+		/* 创建托盘图标 */
+	var tray = win.util.tray(winform); 
+	tray.message = 0xACCF/*_WM_TRAYMESSAGE*/
+	tray.tip = "CopyWrite" //设置鼠标提示
+
+	/* 关闭托盘 */
+	winform.onClose = function(hwnd,message,wParam,lParam){
+    	tray.delete();
+	}
+
+	/* 托盘菜单弹出 */
+	winform.wndproc = function(hwnd,message,wparam,lparam){
+		
+    	if( message == 0xACCF/*_WM_TRAYMESSAGE*/ ) { //托盘回调信息
+        	select(lparam){
+            	case 0x203/*_WM_LBUTTONDBLCLK*/{ //双击托盘图标打开窗口
+                	if( win.isVisible(winform.hwnd) ){
+                    	winform.hitmin();  //最小化窗口
+                	}
+                	else {
+                    	winform.show(0x9/*_SW_RESTORE*/);
+                    	win.setForeground(winform.hwnd)
+                	}
+            	}
+            	case 0x205/*_WM_RBUTTONUP*/ {//单击鼠标右键弹出菜单
+                	x,y = mouse.getPos();
+                	win.setForeground(winform.hwnd);
+                	winform.popmenu.popup( x,y,true );
+            	}  
+            	case 0x201/*_WM_LBUTTONDOWN*/ {//单击鼠标左键前置窗口
+                	win.setForeground(winform.hwnd)
+            	}        
+        	}                                                  
+    	}
+    	elseif( message == 0x112/*_WM_SYSCOMMAND*/ ){ //系统命令消息
+        	if( wparam == 0xF020/*_SC_MINIMIZE*/ ){ //用户点击了最小化按钮
+            	//winform.show(false); //隐藏窗口
+            	//return true;//阻击默认消息传递，取消最小化过程
+        	}
+    	}
+    	
+    	
+    	/* 弹出式菜单 */
+		winform.popmenu = win.ui.popmenu(winform);
+		winform.popmenu.add('退出',function(id){
+    		winform.close();
+		})
+		
+		
+	}  
+	
+
+
+}
