@@ -203,11 +203,11 @@ import getText from "./utils/my.js";
             print(`正在识别第${cursor.total}个视频：${playing.desc}...`)
 
             /* 时长判断 */
-            if (playing.duration > config.duration) {
+            /*if (playing.duration > config.duration) {
                 print(`视频时长超出${config.duration}s限制，自动跳过....`);
                 cursor.error++;
                 continue;
-            }
+            }*/
 
 
             /* 获取页面cookie */
